@@ -1,0 +1,18 @@
+{
+  "id":"0501199610",
+  "category": {
+    "id": 1,
+    "name": "cattest2022"
+  },
+  "name": "Legolas",
+  "photoUrls": [
+    "string"
+  ],
+  "tags": [
+    {
+      "id": 202,
+      "name": "cat category test"
+    }
+  ],
+  "status": "available"
+}

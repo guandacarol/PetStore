@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static io.restassured.RestAssured.baseURI;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
@@ -30,7 +31,7 @@ public class Pet {
 
 // incluir - create - post
 
-    @Test  //identifica o método/função como um teste, para o TestNG
+    @Test(priority = 1)  //identifica o método/função como um teste, para o TestNG
     public void incluirPet() throws IOException {
        String jsonBody = lerJson("dadosdb/pet1.json");
 
@@ -46,10 +47,37 @@ public class Pet {
             .statusCode(200)
             .body("name", is ("Legolas"))
             .body("status", is("available"))
-                .body("category.name", is ("Cat"))
+                .body("category.name", is ("cattest2022"))
                 .body("tags.name", contains("cat category test"))
 
         ;
   }
+    @Test(priority = 2)
+    public void consultarPet(){
+    String petID = "0501199610";
+
+    String token =
+    given()
+            .contentType("application/json")
+            .log().all()
+
+    .when()
+            .get(uri + "/" + petID)
+    .then()
+            .log().all()
+            .statusCode(200)
+            .body("name", is("Legolas"))
+            .body("category.name", is("cattest2022"))
+            .body("status", is("available"))
+    .extract()
+            .path("category.name")
+    ;
+
+        System.out.println("O Token é " + token);
+
+
+
+    }
+
 
 }
