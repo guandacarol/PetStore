@@ -12,8 +12,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static io.restassured.RestAssured.baseURI;
-import static io.restassured.RestAssured.given;
+import static io.restassured.RestAssured.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.Matchers.contains;
 
@@ -40,8 +39,10 @@ public class Pet {
             .contentType("application/json") // comum em API REST - antigas eram "text/xml"
             .log().all()
             .body(jsonBody)
+
         .when() //quando
             .post(uri)
+
         .then()   //entao
             .log().all()
             .statusCode(200)
@@ -53,31 +54,47 @@ public class Pet {
         ;
   }
     @Test(priority = 2)
-    public void consultarPet(){
-    String petID = "0501199610";
+    public void consultarPet() {
+        String petID = "0501199610";
 
-    String token =
-    given()
-            .contentType("application/json")
-            .log().all()
+        String token =
+                given()
+                        .contentType("application/json")
+                        .log().all()
 
-    .when()
-            .get(uri + "/" + petID)
-    .then()
-            .log().all()
-            .statusCode(200)
-            .body("name", is("Legolas"))
-            .body("category.name", is("cattest2022"))
-            .body("status", is("available"))
-    .extract()
-            .path("category.name")
-    ;
+                .when()
+                        .get(uri + "/" + petID) //GET = consultar
+                .then()
+                        .log().all()
+                        .statusCode(200)
+                        .body("name", is("Legolas"))
+                        .body("category.name", is("cattest2022"))
+                        .body("status", is("available"))
 
-        System.out.println("O Token é " + token);
-
-
-
+                .extract()
+                        .path("category.name")
+                ;
+                System.out.println("O Token é " + token);
     }
 
+    @Test(priority = 3)
+    public void alterarPet() throws IOException {
+      String jsonBody = lerJson("dadosdb/pet2.json");
+
+      given()
+              .contentType("application/json")
+              .log().all()
+              .body(jsonBody)
+
+      .when()
+              .put(uri)  //put = alterar
+
+      .then()
+              .log().all()
+              .statusCode(200)
+              .body("name", is("Legolas"))
+              .body("status", is("sold"))
+      ;
+    }
 
 }
