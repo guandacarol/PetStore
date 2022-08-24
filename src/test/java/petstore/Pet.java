@@ -97,4 +97,24 @@ public class Pet {
       ;
     }
 
+    @Test(priority = 4)
+    public void excluirPet() {
+        String petID = "501199610";
+
+      given()
+              .contentType("application/json")
+              .log().all()
+
+      .when()
+              .delete(uri + "/" + petID)
+
+      .then()
+              .log().all()
+              .statusCode(200)
+              .body("code", is (200))
+              .body("type", is("unknown"))
+              .body("message", is(petID))
+      ;
+    }
+
 }
